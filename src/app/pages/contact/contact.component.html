@@ -8,11 +8,8 @@
   <div *ngIf="contact; else errors">
 
     <h3 id="titreListeContact"> Liste des contacts</h3>
-
     <button id="buttonAddContact" type="button" class="btn btn-light" (click)="openlg(content)" > <img src="assets/person-plus.svg"> Créer un contact </button>
-
     <div class="card-body">
-
       <div class="row">
 
         <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchContact()" >
