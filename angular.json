@@ -31,7 +31,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.scss"
             ],
             "scripts": []
           },
@@ -107,5 +109,7 @@
       }
     }
   },
-  "defaultProject": "carnet_contact"
+  "cli": {
+    "analytics": "a64f69ae-f905-405c-bdd4-185f0f94f429"
+  }
 }
