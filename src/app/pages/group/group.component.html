@@ -1,0 +1,132 @@
+<ng-template #errors>
+  <h2 id="Messageerror" class="text-danger">{{errorMessage}}</h2>
+  <!--<img id="imageerror" src="assets/error500.svg">-->
+</ng-template>
+
+
+<div class="container">
+  <h3 id="titreListeGroup"> Liste des groupes</h3>
+
+  <button id="buttonAddgroup" type="button" class="btn btn-light" (click)="openAddGroup(content)"> <img src="assets/person-plus.svg"> Créer un groupe </button>
+
+  <div id="listeVide" *ngIf="!group.length; else errors ">
+    <div><img src="assets/emptyList.svg"></div>
+    <div> <p>La liste des groupes est vide</p>  </div>
+  </div>
+
+
+  <div *ngIf="group.length" class="card container mt-5">
+
+    <div class="card-body">
+
+      <table class="table table-borderless">
+        <thead >
+        <tr>
+          <th scope="col">Nom groupe</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let g of group">
+          <td>{{g.GroupName}}</td>
+          <td><button class="btn" (click)="openDetailGroup(content_detailGroup,g)" ><i class="bi bi-eye-fill"></i></button></td>
+          <td><button class="btn" (click)="openupdateGroup(contentUpdate,g)" ><i class="bi bi-pen"></i></button></td>
+          <td><button class="btn"(click)="handelDeleteGroup(g)" ><i class="bi bi-trash-fill"></i></button></td>
+
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+<ng-template #content let-modal>
+
+  <div>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title"> Ajouter un groupe </h3>
+      <button  class="btn" (click)="modal.dismiss('Cross click')">
+        <i class="bi bi-x-square"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="groupForm" (ngSubmit)="handleAddGroup()">
+
+      <div class="modal-body">
+        <label for="groupName">Nom du groupe</label>
+
+        <input type="text" id="groupName" formControlName="groupName" class="form-control-plaintext" >
+        <small *ngIf="groupForm.controls['groupName'].errors && groupForm.controls['groupName'].touched" class="text-danger">
+          {{getErrorMessage('groupName', groupForm.controls['groupName'].errors )}}
+        </small>
+      </div>
+
+      <button id="confirmgroupButtom" [disabled]="groupForm.invalid"  type="submit" class="btn "> Enregistrer </button>
+
+    </form>
+  </div>
+
+</ng-template>
+
+<ng-template #content_detailGroup let-modal>
+
+  <div>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title-detailGroup"> Fiche groupe </h3>
+      <button  class="btn" (click)="modal.dismiss('Cross click')">
+        <i class="bi bi-x-square"></i>
+      </button>
+    </div>
+
+    <div class="card container mt-1">
+    <div class="card-header">
+      Mes contacts du groupe
+    </div>
+    <div class="card-body">
+      <table class="table table-borderless">
+      <tbody>
+      <tr *ngFor="let contact of listeConatct">
+        <td><i class="bi bi-person-lines-fill"></i></td>
+        <td>{{contact.firstName}}</td>
+        <td>{{contact.lastName}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+    </div>
+    </div>
+  </div>
+
+</ng-template>
+
+
+
+<ng-template #contentUpdate let-modal>
+
+  <div>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title-update"> Mise à jour  groupe </h3>
+      <button  class="btn" (click)="modal.dismiss('Cross click')">
+        <i class="bi bi-x-square"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="groupUpdateForm" (ngSubmit)="handleUpdateGroup()">
+
+      <div class="modal-body">
+        <label for="updateGroupInput">Votre nouveau nom </label>
+
+        <input type="text" id="updateGroupInput" placeholder="Nom" formControlName="groupUpdateForm"  class="form-control-plaintext" >
+        <small *ngIf="groupUpdateForm.controls['groupUpdateForm'].errors && groupUpdateForm.controls['groupUpdateForm'].touched" class="text-danger">
+          {{getErrorMessage('groupUpdateForm', groupUpdateForm.controls['groupUpdateForm'].errors )}}
+        </small>
+      </div>
+
+      <button id="confirmgroupButtom2" [disabled]="groupUpdateForm.invalid"  type="submit" class="btn "> Enregistrer </button>
+
+    </form>
+  </div>
+
+</ng-template>
