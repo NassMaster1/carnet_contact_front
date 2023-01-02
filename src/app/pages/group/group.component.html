@@ -29,7 +29,7 @@
         <tbody>
         <tr *ngFor="let g of group">
           <td>{{g.GroupName}}</td>
-          <td><button class="btn" (click)="openDetailGroup(content_detailGroup,g)" ><i class="bi bi-eye-fill"></i></button></td>
+          <td><button id="voirLesContactsBtn" class="btn btn-outline-dark" (click)="openDetailGroup(content_detailGroup,g)" >Contacts groupe</button></td>
           <td><button class="btn" (click)="openupdateGroup(contentUpdate,g)" ><i class="bi bi-pen"></i></button></td>
           <td><button class="btn"(click)="handelDeleteGroup(g)" ><i class="bi bi-trash-fill"></i></button></td>
 
