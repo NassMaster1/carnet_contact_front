@@ -11,8 +11,6 @@ button[type="submit"]:hover{
 }
 
 
-
-
 #buttonAddgroup {
 
   color: #4c4e4e;
@@ -37,7 +35,6 @@ button[type="submit"]:hover{
 }
 
 
-
 #buttonAddgroup img {
   margin-right: 5%;
   margin-bottom: 3%;
@@ -59,6 +56,9 @@ input{
   background-color: rgba(232, 232, 232, 0.45);
 }
 
+label{
+  font-weight: bold;
+}
 
 #listeVide  img{
   width: 60%;

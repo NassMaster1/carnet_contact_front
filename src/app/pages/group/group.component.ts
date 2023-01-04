@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Contact} from "../model/contact.model";
 import {ContactGroup} from "../model/contactGroup.model";
-import {ContactService} from "../services/contact.service";
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {GroupService} from "../services/group.service";
-import {PhoneNumbers} from "../model/phoneNumbers.model";
-import {Adresse} from "../model/adresse.model";
+
 
 @Component({
   selector: 'app-group',
@@ -17,6 +15,7 @@ export class GroupComponent implements OnInit {
 
 
   group!:Array<ContactGroup>;
+
   groupSingle!:ContactGroup;
 
   groupForm!:FormGroup;
@@ -42,6 +41,18 @@ export class GroupComponent implements OnInit {
     this.handelGetAllContactGroup()
   }
 
+  getErrorMessage(name: string, error: ValidationErrors) {
+    if(error['required']){
+      return "Le champ "+name + " est obligatoire"
+    }else if(error['minlength']){
+      return "Le champ " + name + " doit contenir au moins "+error['minlength']['requiredLength']+ " caractères"
+    }else if (error['email']){
+      return "Le champ " + name + " est invalid"
+    }
+
+    else return "Champ invalid"
+  }
+
   handelGetAllContactGroup(){
     this.groupService.getAllContactGroup().subscribe(
       {
@@ -55,27 +66,52 @@ export class GroupComponent implements OnInit {
       });
   }
 
+  handelDeleteGroup(g: ContactGroup) {
+    let conf=confirm("Etes vous sur de vouloir supprmier le group "+g.GroupName)
+    if(conf==false) return;
+    this.groupService.deleteGroup(g.id).subscribe(
+      {
+        next:(data)=>{
+          let index=this.group.indexOf(g)
+          this.group.splice(index,1)
+        }
+      }
+    )
 
-  getErrorMessage(name: string, error: ValidationErrors) {
-    if(error['required']){
-      return "Le champ "+name + " est obligatoire"
-    }else if(error['minlength']){
-      return "Le champ " + name + " doit contenir au moins "+error['minlength']['requiredLength']+ " caractères"
-    }else if (error['email']){
-      return "Le champ " + name + " est invalid"
-    }
-
-    else return "Champ invalid"
   }
 
-  openAddGroup(content:any) {
-    this.groupForm.reset()
-    this.modalService.open(content,{centered: true,backdrop: 'static'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+  handleAddGroup() {
+    let group=this.groupForm.value
+    console.log(group)
+
+    let contactGroup:ContactGroup={id:0,GroupName:group["groupName"]}
+
+    this.groupService.AddContactgroup(contactGroup).subscribe({
+      next:(data)=>{
+        this.modalService.dismissAll()
+        this.handelGetAllContactGroup()
+      },error:err => {
+        console.error(err)
+      }
+    })
   }
+
+  handleUpdateGroup() {
+    let group=this.groupUpdateForm.value
+    console.log(group)
+
+    let contactGroup:ContactGroup={id:0,GroupName:group["groupUpdateForm"]}
+
+    this.groupService.UpdateContactgroup(this.groupSingle.id, contactGroup).subscribe({
+      next:(data)=>{
+        this.modalService.dismissAll()
+        this.handelGetAllContactGroup()
+      },error:err => {
+        console.error(err)
+      }
+    })
+  }
+
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -87,21 +123,13 @@ export class GroupComponent implements OnInit {
     }
   }
 
-
-    handleAddGroup() {
-      let group=this.groupForm.value
-      console.log(group)
-
-      let contactGroup:ContactGroup={id:0,GroupName:group["groupName"]}
-
-      this.groupService.AddContactgroup(contactGroup).subscribe({
-        next:(data)=>{
-          this.modalService.dismissAll()
-          this.handelGetAllContactGroup()
-        },error:err => {
-          console.error(err)
-        }
-      })
+  openAddGroup(content:any) {
+    this.groupForm.reset()
+    this.modalService.open(content,{centered: true,backdrop: 'static'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
 
   openDetailGroup(content: any, g: ContactGroup) {
@@ -125,19 +153,6 @@ export class GroupComponent implements OnInit {
 
   }
 
-  handelDeleteGroup(g: ContactGroup) {
-    let conf=confirm("Etes vous sur de vouloir supprmier le group "+g.GroupName)
-    if(conf==false) return;
-    this.groupService.deleteGroup(g.id).subscribe(
-      {
-        next:(data)=>{
-          let index=this.group.indexOf(g)
-          this.group.splice(index,1)
-        }
-      }
-    )
-
-  }
 
   openupdateGroup(content: any, g: ContactGroup) {
     this.groupUpdateForm.reset()
@@ -150,31 +165,13 @@ export class GroupComponent implements OnInit {
           });
 
           this.groupSingle=data;
-
-          if(this.groupSingle.GroupName!=null)
-          {
-            // @ts-ignore
-            document.getElementById('updateGroupInput').setAttribute('value',this.groupSingle.GroupName);
-          }
-
+          this.groupUpdateForm.patchValue({
+            groupUpdateForm:this.groupSingle.GroupName
+          })
         }
       }
     )
   }
 
-  handleUpdateGroup() {
-    let group=this.groupUpdateForm.value
-    console.log(group)
 
-    let contactGroup:ContactGroup={id:0,GroupName:group["groupUpdateForm"]}
-
-    this.groupService.UpdateContactgroup(this.groupSingle.id, contactGroup).subscribe({
-      next:(data)=>{
-        this.modalService.dismissAll()
-        this.handelGetAllContactGroup()
-      },error:err => {
-        console.error(err)
-      }
-    })
-  }
 }

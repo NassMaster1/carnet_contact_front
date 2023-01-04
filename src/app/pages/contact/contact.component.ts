@@ -23,7 +23,6 @@ export class ContactComponent implements OnInit {
 
   ListGroup!:Array<ContactGroup>;
 
-
   phoneNumber!:PhoneNumbers;
 
   errorMessage!:string;
@@ -40,8 +39,6 @@ export class ContactComponent implements OnInit {
 
   closeResult!:string;
   UpdatePhoneFormGroup!: FormGroup;
-
-
 
 
   constructor( private contactService:ContactService , private groupService:GroupService ,private fp: FormBuilder , private modalService: NgbModal) { }
@@ -96,6 +93,18 @@ export class ContactComponent implements OnInit {
     this.handelGetAllContact()
   }
 
+  getErrorMessage(name: string, error: ValidationErrors) {
+    if(error['required']){
+      return "Le champ "+name + " est obligatoire"
+    }else if(error['minlength']){
+      return "Le champ " + name + " doit contenir au moins "+error['minlength']['requiredLength']+ " caractères"
+    }else if (error['email']){
+      return "Le champ " + name + " est invalid"
+    }
+
+    else return "Champ invalid"
+  }
+
   handelGetAllContact(){
     this.contactService.getAllContacts().subscribe(
       {
@@ -121,7 +130,6 @@ export class ContactComponent implements OnInit {
     )
   }
 
-
   handleSearchContact() {
     let keyword = this.searchFormGroup.value.keyword;
     this.contactService.searchContacts(keyword).subscribe( {
@@ -131,7 +139,6 @@ export class ContactComponent implements OnInit {
     })
 
   }
-
 
   handleAddContact() {
     let detailContact=this.ContactFormGroup.value
@@ -158,17 +165,99 @@ export class ContactComponent implements OnInit {
     })
   }
 
+  handelDeletePhoneNumber(phone: PhoneNumbers) {
+    let conf=confirm("Etes vous sur de vouloir supprmier le numéro "+phone.phoneNumber)
+    if(conf==false) return;
+    this.phoneNumber=phone;
+    console.log(this.phoneNumber)
+    this.contactService.deletePhoneNumber(this.detailContact.contactDTO.id, this.phoneNumber.id).subscribe(
+      {
+        next:(data)=>{
+            this.modalService.dismissAll()
+        }
+      }
+    )
+  }
 
-  getErrorMessage(name: string, error: ValidationErrors) {
-    if(error['required']){
-      return "Le champ "+name + " est obligatoire"
-    }else if(error['minlength']){
-      return "Le champ " + name + " doit contenir au moins "+error['minlength']['requiredLength']+ " caractères"
-    }else if (error['email']){
-      return "Le champ " + name + " est invalid"
+  handelAddPhoneNumber() {
+    let phoneForm=this.AddPhoneFormGroup.value
+    let phoneNumber:PhoneNumbers={id:0,phoneKind:phoneForm["phoneKind"],phoneNumber:phoneForm["phoneNumber"]}
+    console.log(this.phoneNumber)
+    this.contactService.AddPhoneNumber(this.detailContact.contactDTO.id,phoneNumber).subscribe(
+      {
+        next:(data)=>{
+          this.modalService.dismissAll()
+        }
+      }
+    )
+  }
+
+  handelgetAllGroup() {
+    this.groupService.getAllContactGroup().subscribe(
+      {
+        next:(data)=>{
+          this.ListGroup=data;
+          console.log(data)
+        },
+        error :(err)=> {
+          this.errorMessage="une erreur serveur s'est produite";
+        }
+      });
+  }
+
+  handelAddGroup() {
+    console.log("sdsd")
+    let groupForm=this.AddGroupFormGroup.value
+    this.groupService.AddContactToGroup(this.detailContact.contactDTO.id,groupForm["idGroup"]).subscribe(
+      {
+        next:(data)=>{
+          alert("Le contact a été ajouté au groupe")
+          this.modalService.dismissAll()
+        }
+      }
+    )
+  }
+
+  handleUpdateContact() {
+
+    let detailContactUpdate=this.UpdateFormContact.value
+
+    let contact:Contact={id:0,firstName:detailContactUpdate["firstName"],lastName:detailContactUpdate["lastName"],email:detailContactUpdate["email"]}
+    let phoneNumber:PhoneNumbers={id:0,phoneKind:detailContactUpdate["phoneKind"],phoneNumber:detailContactUpdate["phoneNumber"]}
+    let adresse:Adresse={adresse_id:0,street:detailContactUpdate["street"],city:detailContactUpdate["city"],zip:detailContactUpdate["zip"],country:detailContactUpdate["country"]}
+
+
+    console.log(adresse)
+    const ContactJson={
+      contactDTO:contact,
+      phoneNumbers:Array(phoneNumber),
+      adresse:adresse
     }
 
-    else return "Champ invalid"
+    this.contactService.UpdateContact(this.detailContact.contactDTO.id,ContactJson).subscribe({
+      next:(data)=>{
+        this.modalService.dismissAll()
+        this.handelGetAllContact()
+      },error:err => {
+        console.error(err)
+      }
+    })
+
+  }
+
+  handelUpdatePhoneNumber() {
+    let phoneForm=this.UpdatePhoneFormGroup.value
+    let phoneNumber:PhoneNumbers={id:0,phoneKind:phoneForm["phoneKind"],phoneNumber:phoneForm["phoneNumber"]}
+    console.log(this.phoneNumber)
+    this.contactService.UpdatePhone(this.detailContact.contactDTO.id,this.phoneNumber.id,phoneNumber).subscribe(
+      {
+        next:(data)=>{
+          this.modalService.dismissAll()
+          alert("Le numéro a été mis à jour")
+          this.UpdatePhoneFormGroup.reset()
+        }
+      }
+    )
   }
 
   private getDismissReason(reason: any): string {
@@ -206,7 +295,6 @@ export class ContactComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
 
   openDetails(targetModal: any, co: Contact) {
 
@@ -269,48 +357,6 @@ export class ContactComponent implements OnInit {
     )
   }
 
-  handelDeletePhoneNumber(phone: PhoneNumbers) {
-    let conf=confirm("Etes vous sur de vouloir supprmier le numéro "+phone.phoneNumber)
-    if(conf==false) return;
-    this.phoneNumber=phone;
-    console.log(this.phoneNumber)
-    this.contactService.deletePhoneNumber(this.detailContact.contactDTO.id, this.phoneNumber.id).subscribe(
-      {
-        next:(data)=>{
-            this.modalService.dismissAll()
-        }
-      }
-    )
-  }
-
-  handelAddPhoneNumber() {
-    let phoneForm=this.AddPhoneFormGroup.value
-    let phoneNumber:PhoneNumbers={id:0,phoneKind:phoneForm["phoneKind"],phoneNumber:phoneForm["phoneNumber"]}
-    console.log(this.phoneNumber)
-    this.contactService.AddPhoneNumber(this.detailContact.contactDTO.id,phoneNumber).subscribe(
-      {
-        next:(data)=>{
-          this.modalService.dismissAll()
-        }
-      }
-    )
-  }
-
-
-
-  handelgetAllGroup() {
-    this.groupService.getAllContactGroup().subscribe(
-      {
-        next:(data)=>{
-          this.ListGroup=data;
-          console.log(data)
-        },
-        error :(err)=> {
-          this.errorMessage="une erreur serveur s'est produite";
-        }
-      });
-  }
-
   openAddGroup(contentAddgroup: any, co: Contact) {
     this.contactService.getDetailContactById(co.id).subscribe(
       {
@@ -327,48 +373,6 @@ export class ContactComponent implements OnInit {
         }
       }
     )
-  }
-
-
-  handelAddGroup() {
-    console.log("sdsd")
-    let groupForm=this.AddGroupFormGroup.value
-    this.groupService.AddContactToGroup(this.detailContact.contactDTO.id,groupForm["idGroup"]).subscribe(
-      {
-        next:(data)=>{
-          alert("Le contact a été ajouté au groupe")
-          this.modalService.dismissAll()
-        }
-      }
-    )
-  }
-
-
-  handleUpdateContact() {
-
-    let detailContactUpdate=this.UpdateFormContact.value
-
-    let contact:Contact={id:0,firstName:detailContactUpdate["firstName"],lastName:detailContactUpdate["lastName"],email:detailContactUpdate["email"]}
-    let phoneNumber:PhoneNumbers={id:0,phoneKind:detailContactUpdate["phoneKind"],phoneNumber:detailContactUpdate["phoneNumber"]}
-    let adresse:Adresse={adresse_id:0,street:detailContactUpdate["street"],city:detailContactUpdate["city"],zip:detailContactUpdate["zip"],country:detailContactUpdate["country"]}
-
-
-    console.log(adresse)
-    const ContactJson={
-      contactDTO:contact,
-      phoneNumbers:Array(phoneNumber),
-      adresse:adresse
-    }
-
-    this.contactService.UpdateContact(this.detailContact.contactDTO.id,ContactJson).subscribe({
-      next:(data)=>{
-        this.modalService.dismissAll()
-        this.handelGetAllContact()
-      },error:err => {
-        console.error(err)
-      }
-    })
-
   }
 
   openUpdate(contentUpdate: any, co: Contact) {
@@ -397,21 +401,6 @@ export class ContactComponent implements OnInit {
     )
   }
 
-  handelUpdatePhoneNumber() {
-    let phoneForm=this.UpdatePhoneFormGroup.value
-    let phoneNumber:PhoneNumbers={id:0,phoneKind:phoneForm["phoneKind"],phoneNumber:phoneForm["phoneNumber"]}
-    console.log(this.phoneNumber)
-    this.contactService.UpdatePhone(this.detailContact.contactDTO.id,this.phoneNumber.id,phoneNumber).subscribe(
-      {
-        next:(data)=>{
-          this.modalService.dismissAll()
-          alert("Le numéro a été mis à jour")
-          this.UpdatePhoneFormGroup.reset()
-        }
-      }
-    )
-  }
-
   openUpdatePhone(contentUpdatePhone: any, phone: PhoneNumbers) {
           this.phoneNumber=phone;
           this.modalService.open(contentUpdatePhone, {
@@ -424,6 +413,7 @@ export class ContactComponent implements OnInit {
       phoneNumber:this.phoneNumber.phoneNumber,
     })
   }
+
 }
 
 

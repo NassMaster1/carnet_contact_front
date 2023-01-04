@@ -1,12 +1,18 @@
-<ng-template #errors>
-  <h2 id="Messageerror" class="text-danger">{{errorMessage}}</h2>
-  <!--<img id="imageerror" src="assets/error500.svg">-->
-</ng-template>
-
-
 <div class="container">
 
-  <div class="row">
+  <!-- **************************************************************************************************** -->
+  <!-- ############################### EROOR SERVER  ######################## -->
+  <!-- **************************************************************************************************** -->
+  <ng-template #errors>
+    <h2 id="Messageerror" class="text-danger">{{errorMessage}}</h2>
+    <!--<img id="imageerror" src="assets/error500.svg">-->
+  </ng-template>
+
+  <!-- **************************************************************************************************** -->
+  <!-- ###############################  Search And Button Add Groups   ######################## -->
+  <!-- **************************************************************************************************** -->
+
+  <div class="row mb-5">
 
     <h3 id="titreListeGroup"> Liste des groupes</h3>
 
@@ -28,17 +34,14 @@
       <img src="assets/emptyList.svg">
       <p>La liste des groupes est vide</p>
     </div>
-
   </div>
 
-
-
-
+  <!-- **************************************************************************************************** -->
+  <!-- ###############################  ALL groups   ######################## -->
+  <!-- **************************************************************************************************** -->
 
   <div *ngIf="group.length" class="card container mt-4">
-
     <div class="card-body">
-
       <table class="table table-borderless">
         <thead >
         <tr>
@@ -62,6 +65,9 @@
 
 </div>
 
+<!-- **************************************************************************************************** -->
+<!-- ###############################   Add Group    ######################## -->
+<!-- **************************************************************************************************** -->
 <ng-template #content let-modal>
 
   <div>
@@ -90,11 +96,15 @@
 
 </ng-template>
 
+<!-- **************************************************************************************************** -->
+<!-- ###############################   Detail contacts Group   ######################## -->
+<!-- **************************************************************************************************** -->
+
 <ng-template #content_detailGroup let-modal>
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title-detailGroup"> Fiche groupe </h3>
+      <h3 class="modal-title" id="modal-basic-title-detailGroupContact"> Fiche groupe </h3>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
@@ -127,6 +137,9 @@
 </ng-template>
 
 
+<!-- **************************************************************************************************** -->
+<!-- ###############################   Update Group   ######################## -->
+<!-- **************************************************************************************************** -->
 
 <ng-template #contentUpdate let-modal>
 
@@ -141,7 +154,7 @@
     <form [formGroup]="groupUpdateForm" (ngSubmit)="handleUpdateGroup()">
 
       <div class="modal-body">
-        <label for="updateGroupInput">Votre nouveau nom du groupe </label>
+        <label for="updateGroupInput"> Nom groupe </label>
 
         <input type="text" id="updateGroupInput" placeholder="Nom" formControlName="groupUpdateForm"  class="form-control-plaintext" >
         <small *ngIf="groupUpdateForm.controls['groupUpdateForm'].errors && groupUpdateForm.controls['groupUpdateForm'].touched" class="text-danger">
