@@ -5,17 +5,37 @@
 
 
 <div class="container">
-  <h3 id="titreListeGroup"> Liste des groupes</h3>
 
-  <button id="buttonAddgroup" type="button" class="btn btn-light" (click)="openAddGroup(content)"> <img src="assets/person-plus.svg"> Créer un groupe </button>
+  <div class="row">
 
-  <div id="listeVide" *ngIf="!group.length; else errors ">
-    <div><img src="assets/emptyList.svg"></div>
-    <div> <p>La liste des groupes est vide</p>  </div>
+    <h3 id="titreListeGroup"> Liste des groupes</h3>
+
+    <div class=" col-md-10 col-sm-12" >
+
+      <form >
+        <div class="input-group">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button id="logoSearch" class="btn bi-search"> </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-2 col-sm-6" >
+      <button id="buttonAddgroup" type="button" class="btn btn-light" (click)="openAddGroup(content)"> <img src="assets/person-plus.svg"> Créer un groupe </button>
+    </div>
+
+    <div id="listeVide" *ngIf="!group.length; else errors ">
+      <img src="assets/emptyList.svg">
+      <p>La liste des groupes est vide</p>
+    </div>
+
   </div>
 
 
-  <div *ngIf="group.length" class="card container mt-5">
+
+
+
+  <div *ngIf="group.length" class="card container mt-4">
 
     <div class="card-body">
 
@@ -84,7 +104,7 @@
     <div class="card-header">
       Mes contacts du groupe
     </div>
-    <div class="card-body">
+    <div class="card-body" *ngIf="listeConatct.length">
       <table class="table table-borderless">
       <tbody>
       <tr *ngFor="let contact of listeConatct">
@@ -96,6 +116,11 @@
     </table>
 
     </div>
+
+      <div class="card-body "  *ngIf="!listeConatct.length">
+        <div> <p>Aucun contact</p>  </div>
+      </div>
+
     </div>
   </div>
 
@@ -116,7 +141,7 @@
     <form [formGroup]="groupUpdateForm" (ngSubmit)="handleUpdateGroup()">
 
       <div class="modal-body">
-        <label for="updateGroupInput">Votre nouveau nom </label>
+        <label for="updateGroupInput">Votre nouveau nom du groupe </label>
 
         <input type="text" id="updateGroupInput" placeholder="Nom" formControlName="groupUpdateForm"  class="form-control-plaintext" >
         <small *ngIf="groupUpdateForm.controls['groupUpdateForm'].errors && groupUpdateForm.controls['groupUpdateForm'].touched" class="text-danger">

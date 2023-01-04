@@ -6,26 +6,37 @@ button[type="submit"]{
 }
 
 button[type="submit"]:hover{
+  color: #f7f5ec;
   background-color: #661dff;
 }
 
 
-#buttonAddgroup{
+
+
+#buttonAddgroup {
+
   color: #4c4e4e;
   font-size: x-small;
   letter-spacing: .0178571429em;
-  border: 0.20em solid rgba(255, 255, 255, 0);
-  width: 200px;
-  height: auto;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
+  width: 170px;
+  height: 37px;
   font-weight: bold;
-  background: white;
+  margin-top: 1%;
+  background-color: rgba(243, 243, 243, 0.7);
+  border: none;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
 }
 
 #buttonAddgroup:hover {
-  color: black;
-  background: #dbcbf8;
+  background-color: #c5aef6;
+  box-shadow: 0px 15px 20px #dbcbf8;
+  transform: translateY(-7px);
 }
+
+
 
 #buttonAddgroup img {
   margin-right: 5%;
@@ -40,20 +51,27 @@ button[type="submit"]:hover{
 
 input{
   border: none;
-  border-bottom: 2px solid #4f3871;
+  border-bottom: 2px solid rgba(199, 198, 198, 0.73);
+  text-transform: capitalize;
 }
 
-#listeVide div img{
-  width: 20%;
+#logoSearch{
+  background-color: rgba(232, 232, 232, 0.45);
+}
+
+
+#listeVide  img{
+  width: 60%;
   height: 20%;
-  margin-left: 40%;
-  margin-top: 5%;
+  display: block;
+  margin-top: 10%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#listeVide div p {
-  margin-left: 36%;
+#listeVide  p {
+  margin-left: 40%;
   margin-top: 2%;
-  font-family: "Lucida Console", Monaco, monospace;
   font-weight: bold;
   font-size: larger;
 }
@@ -63,7 +81,7 @@ td{
 }
 
 #titreListeGroup{
-  margin-top: 5%;
+  margin-top: 10%;
   margin-bottom: 3%;
   font-weight: bold;
   font-size: x-large;

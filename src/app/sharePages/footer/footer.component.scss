@@ -5,7 +5,7 @@
   display: inline-block;
 }
 
-#logo_reseau {
+#logo_reseau ul a{
   margin-top: 2%;
 }
 
@@ -21,15 +21,21 @@ footer {
 }
 
 
-#logoContactBook{
+#logoContactBook span{
   background-color: #661dff;
-  margin-top: 20%;
 }
 
-img {
-  width: 30%;
+
+#logoNanterre {
+  width: 40%;
   height: auto;
   margin-left: 30%;
-  margin-top: 1%;
+  margin-top: 3%;
 }
 
+#logoMiage {
+  width: 35%;
+  height: auto;
+  margin-left: 30%;
+  margin-top: 5%;
+}

@@ -7,10 +7,11 @@
 
   <div *ngIf="contact; else errors">
 
-    <h3 id="titreListeContact"> Liste des contacts</h3>
-    <button id="buttonAddContact" type="button" class="btn btn-light" (click)="openlg(content)" > <img src="assets/person-plus.svg"> Créer un contact </button>
-    <div class="card-body">
-      <div class="row">
+    <div class="row mb-5">
+
+        <h3 id="titreListeContact"> Liste des contacts</h3>
+
+      <div class=" col-md-10 col-sm-12" >
 
         <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchContact()" >
           <div class="input-group">
@@ -18,11 +19,21 @@
             <button id="logoSearch" class="btn bi-search"> </button>
           </div>
         </form>
+      </div>
 
+      <div class="col-md-2 col-sm-6" >
+        <button id="buttonAddContact" type="button" class="btn btn-light" (click)="openlg(content)" > <img src="assets/person-plus.svg" class="svg-image"> Créer un contact </button>
+      </div>
+
+
+    </div>
+
+    <div class="card-body">
+      <div class="row">
 
         <div id="listeVide" *ngIf="!contact.length">
-          <div><img src="assets/emptyList.svg"></div>
-          <div> <p>La liste des contacts est vide</p>  </div>
+          <img src="assets/emptyList.svg">
+           <p>La liste des contacts est vide</p>
         </div>
 
         <div class="col-12 col-sm-6 col-md-4 col-lg-3"  *ngFor="let co of contact">
@@ -33,10 +44,11 @@
             <div class="team-content">
               <h3 id="Namecontact" class="name"> {{co.firstName}} {{co.lastName}}</h3>
             </div>
+
             <ul class="social">
-              <button class="btn " (click)="openDetails(contentDetail,co)"> <i class="bi bi-eye-fill"></i></button>
-              <button class="btn " (click)="openPhone(contentMobil,co)"> <i class="bi bi-telephone-fill"></i></button>
-              <button class="btn" > <i class="bi bi-pen"></i></button>
+              <button class="btn" (click)="openDetails(contentDetail,co)"> <i class="bi bi-eye-fill"></i></button>
+              <button class="btn" (click)="openPhone(contentMobil,co)"> <i class="bi bi-telephone-fill"></i></button>
+              <button class="btn" (click)="openUpdate(contentUpdate,co)"> <i class="bi bi-pen"></i></button>
               <button class="btn" (click)="openAddGroup(contentAddgroup,co)"> <i class="bi bi-person-rolodex"></i> </button>
               <button class="btn" (click)="handelDeleteContact(co)" > <i class="bi bi-trash-fill"></i> </button>
             </ul>
@@ -52,7 +64,7 @@
 
 <div>
   <div class="modal-header">
-    <h3 class="modal-title" id="modal-basic-title"> Ajouter un contact </h3>
+    <p class="modal-title" id="modal-basic-title"> Ajouter un contact </p>
     <button  class="btn" (click)="modal.dismiss('Cross click')">
       <i class="bi bi-x-square"></i>
     </button>
@@ -91,7 +103,7 @@
         <label for="typeMobile">Type mobile</label>
 
       <div class="input-group mb-3">
-        <select class=" form-control" formControlName="phoneKind" id="typeMobile">
+        <select class=" form-select" formControlName="phoneKind" id="typeMobile">
           <option value="Mobile">Mobile</option>
           <option value="Fixe">Fixe</option>
         </select>
@@ -129,13 +141,13 @@
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal_adresse"> Ajouter une adresse </h3>
+      <p class="modal-title" id="modal_adresse"> Ajouter une adresse </p>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
     </div>
 
-    <form [formGroup]="AdresseFormGroup" (ngSubmit)="handleAddAdresse()">
+    <form [formGroup]="AdresseFormGroup">
 
       <div class="modal-body">
         <label for="street">Rue </label>
@@ -171,14 +183,11 @@
         </div>
 
         <div class="modal-body">
-
           <label for="country">Pays</label>
           <input id="country" class="form-control" formControlName="country" >
-
           <small *ngIf="AdresseFormGroup.controls['country'].errors && AdresseFormGroup.controls['country'].touched" class="text-danger">
             {{getErrorMessage('Pays', AdresseFormGroup.controls['country'].errors)}}
           </small>
-
         </div>
 
         <div class="modal-footer">
@@ -189,13 +198,129 @@
   </div>
 </ng-template>
 
+
+<!-- ############################### Update Contact  ######################## -->
+<ng-template #contentUpdate let-modal>
+
+  <div>
+    <div class="modal-header">
+      <p class="modal-title" id="modal-basic-updateContact"> Mettre à jour le contact </p>
+      <button  class="btn" (click)="modal.dismiss('Cross click')">
+        <i class="bi bi-x-square"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="UpdateFormContact" (ngSubmit)="handleUpdateContact()">
+
+      <div class="modal-body">
+        <label for="firstName">Prénom</label>
+
+        <input type="text" id="Ufirstname" formControlName="firstName" class="form-control" >
+        <small *ngIf="UpdateFormContact.controls['firstName'].errors && UpdateFormContact.controls['firstName'].touched" class="text-danger">
+          {{getErrorMessage('Prénom', UpdateFormContact.controls['firstName'].errors )}}
+        </small>
+      </div>
+
+      <div class="modal-body">
+        <label for="lastname">Nom</label>
+        <input id="Ulastname" formControlName="lastName" class="form-control" >
+        <small *ngIf="UpdateFormContact.controls['lastName'].errors && UpdateFormContact.controls['lastName'].touched" class="text-danger">
+          {{getErrorMessage('Nom', UpdateFormContact.controls['lastName'].errors)}}
+        </small>
+      </div>
+
+      <div class="modal-body">
+        <label for="email">Email</label>
+        <input id="Uemail" formControlName="email" class="form-control" >
+
+        <small *ngIf="UpdateFormContact.controls['email'].errors && UpdateFormContact.controls['email'].touched" class="text-danger">
+          {{getErrorMessage('Email', UpdateFormContact.controls['email'].errors)}}
+        </small>
+      </div>
+
+
+      <div class="modal-body">
+        <label for="typeMobile">Type mobile</label>
+
+        <div class="input-group mb-3">
+          <select class=" form-select" formControlName="phoneKind" id="UtypeMobile">
+            <option value="Mobile">Mobile</option>
+            <option value="Fixe">Fixe</option>
+          </select>
+        </div>
+
+        <small *ngIf="UpdateFormContact.controls['phoneKind'].errors && UpdateFormContact.controls['phoneKind'].touched" class="text-danger">
+          {{getErrorMessage('Type mobile', UpdateFormContact.controls['phoneKind'].errors)}}
+        </small>
+      </div>
+
+      <div class="modal-body">
+        <label for="mobile">Mobile</label>
+        <input id="Umobile" formControlName="phoneNumber" class="form-control" pattern="[0-9]+">
+
+        <small *ngIf="UpdateFormContact.controls['phoneNumber'].errors && UpdateFormContact.controls['phoneNumber'].touched" class="text-danger">
+          {{getErrorMessage('Mobile', UpdateFormContact.controls['phoneNumber'].errors)}}
+        </small>
+      </div>
+
+      <div class="modal-body">
+        <label for="street">Rue </label>
+        <input id="Ustreet" class="form-control" formControlName="street">
+
+        <small *ngIf="UpdateFormContact.controls['street'].errors && UpdateFormContact.controls['street'].touched" class="text-danger">
+          {{getErrorMessage('Rue', UpdateFormContact.controls['street'].errors)}}
+        </small>
+      </div>
+
+      <div class="row m-1">
+
+        <div class="modal-body col-md-8 ">
+
+          <label for="city">Ville</label>
+          <input id="Ucity" class="form-control" formControlName="city">
+
+          <small *ngIf="UpdateFormContact.controls['city'].errors && UpdateFormContact.controls['city'].touched" class="text-danger">
+            {{getErrorMessage('Ville', UpdateFormContact.controls['city'].errors)}}
+          </small>
+
+        </div>
+
+        <div class="modal-body col-md-4  ">
+
+          <label for="zip">Code postal</label>
+          <input id="Uzip" class="form-control" formControlName="zip" pattern="[0-9]+" >
+
+          <small *ngIf="UpdateFormContact.controls['zip'].errors && UpdateFormContact.controls['zip'].touched" class="text-danger">
+            {{getErrorMessage('Code postal', UpdateFormContact.controls['zip'].errors)}}
+          </small>
+
+        </div>
+
+      </div>
+
+      <div class="modal-body">
+        <label for="country">Pays</label>
+        <input id="Ucountry" class="form-control" formControlName="country" >
+        <small *ngIf="UpdateFormContact.controls['country'].errors && UpdateFormContact.controls['country'].touched" class="text-danger">
+          {{getErrorMessage('Pays', UpdateFormContact.controls['country'].errors)}}
+        </small>
+      </div>
+
+      <div class="modal-footer">
+      <button  [disabled]="UpdateFormContact.invalid"  type="submit" class="btn"> Sauvegarder </button>
+      </div>
+    </form>
+  </div>
+
+</ng-template>
+
 <!-- ############################### Contact Detail  ######################## -->
 
 <ng-template #contentDetail let-modal>
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title-detail"> Fiche contact </h3>
+      <p class="modal-title" id="modal-basic-title-detail"> Fiche contact </p>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
@@ -215,7 +340,7 @@
 
       <div class="modal-body">
         <label for="email">Email</label>
-        <input id="Demail"  class="form-control" readonly>
+        <input id="Demail"  class="form-control text-lowercase" readonly>
       </div>
 
       <div class="modal-body">
@@ -242,15 +367,16 @@
   </div>
 </ng-template>
 
-
+<!-- ############################### List Mobile  ######################## -->
 <ng-template #contentMobil let-modal>
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title-mobile"> Liste des numéros </h3>
+      <p class="modal-title" id="modal-basic-title-mobile"> Liste des numéros </p>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
+
     </div>
 
     <form>
@@ -261,8 +387,9 @@
             <tbody>
             <tr>
               <td><i class="bi bi-telephone-fill"></i></td>
-              <td>{{phone.phoneKind}}</td>
+              <td class="text-capitalize">{{phone.phoneKind}}</td>
               <td>{{phone.phoneNumber}}</td>
+              <button (click)="openUpdatePhone(contentUpdatePhone,phone)" class="btn"> <i class="bi bi-pen"></i> </button>
               <button (click)="handelDeletePhoneNumber(phone)" class="btn"> <i class="bi bi-trash-fill"></i> </button>
             </tr>
             </tbody>
@@ -277,12 +404,12 @@
   </div>
 </ng-template>
 
-
+<!-- ############################### Add Mobile  ######################## -->
 <ng-template #contentAddphone let-modal>
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title-addPhone"> Ajouter un numéro </h3>
+      <p class="modal-title" id="modal-basic-title-addPhone"> Ajouter un numéro </p>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
@@ -292,14 +419,14 @@
       <div class="modal-body">
         <label for="typeMobile">Type mobile</label>
         <div class="input-group mb-3">
-          <select class=" form-control" formControlName="phoneKind" id="typeMobile2">
+          <select class=" form-select" formControlName="phoneKind" id="typeMobile2">
             <option value="Mobile">Mobile</option>
             <option value="Fixe">Fixe</option>
           </select>
         </div>
 
-        <small *ngIf="ContactFormGroup.controls['phoneKind'].errors && ContactFormGroup.controls['phoneKind'].touched" class="text-danger">
-          {{getErrorMessage('Type mobile', ContactFormGroup.controls['phoneKind'].errors)}}
+        <small *ngIf="AddPhoneFormGroup.controls['phoneKind'].errors && AddPhoneFormGroup.controls['phoneKind'].touched" class="text-danger">
+          {{getErrorMessage('Type mobile', AddPhoneFormGroup.controls['phoneKind'].errors)}}
         </small>
       </div>
 
@@ -321,11 +448,55 @@
 </ng-template>
 
 
+<!-- ############################### Update Mobile  ######################## -->
+<ng-template #contentUpdatePhone let-modal>
+
+  <div>
+    <div class="modal-header">
+      <p class="modal-title" id="modal-basic-title-UpdateMobile"> Ajouter un numéro </p>
+      <button  class="btn" (click)="modal.dismiss('Cross click')">
+        <i class="bi bi-x-square"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="UpdatePhoneFormGroup" (ngSubmit)="handelUpdatePhoneNumber()">
+      <div class="modal-body">
+        <label for="typeMobile">Type mobile</label>
+        <div class="input-group mb-3">
+          <select class=" form-select" formControlName="phoneKind" id="typeMobile3">
+            <option value="Mobile">Mobile</option>
+            <option value="Fixe">Fixe</option>
+          </select>
+        </div>
+
+        <small *ngIf="UpdatePhoneFormGroup.controls['phoneKind'].errors && UpdatePhoneFormGroup.controls['phoneKind'].touched" class="text-danger">
+          {{getErrorMessage('Type mobile', UpdatePhoneFormGroup.controls['phoneKind'].errors)}}
+        </small>
+      </div>
+
+
+      <div class="modal-body">
+        <label for="mobile">Mobile</label>
+        <input id="mobile3" formControlName="phoneNumber" class="form-control" pattern="[0-9]+">
+
+        <small *ngIf="UpdatePhoneFormGroup.controls['phoneNumber'].errors && UpdatePhoneFormGroup.controls['phoneNumber'].touched" class="text-danger">
+          {{getErrorMessage('Mobile', UpdatePhoneFormGroup.controls['phoneNumber'].errors)}}
+        </small>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="UpdatePhoneFormGroup.invalid"  type="submit" class="btn"> Enregistrer </button>
+      </div>
+    </form>
+  </div>
+
+</ng-template>
+
+<!-- ############################### Add group  ######################## -->
 <ng-template #contentAddgroup let-modal>
 
   <div>
     <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title-addPGroup"> Ajouter au groupe </h3>
+      <p class="modal-title" id="modal-basic-title-addPGroup"> Ajouter au groupe </p>
       <button  class="btn" (click)="modal.dismiss('Cross click')">
         <i class="bi bi-x-square"></i>
       </button>
@@ -335,7 +506,7 @@
         <div class="modal-body">
           <label for="idGroup">Nom du groupe</label>
           <div class="input-group mb-3">
-            <select class=" form-control" formControlName="idGroup" id="idGroup">
+            <select class=" form-select" formControlName="idGroup" id="idGroup">
               <option  *ngFor="let group of ListGroup" value="{{group.id}}">{{group.GroupName}}</option>
             </select>
           </div>

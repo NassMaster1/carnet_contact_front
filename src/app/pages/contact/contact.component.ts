@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ContactService} from "../services/contact.service";
 import {Contact, DetailContact} from "../model/contact.model";
-import {Form, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {PhoneNumbers} from "../model/phoneNumbers.model";
 import {Adresse} from "../model/adresse.model";
 import {ContactGroup} from "../model/contactGroup.model";
 import {GroupService} from "../services/group.service";
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -18,9 +19,10 @@ export class ContactComponent implements OnInit {
 
   detailContact!:DetailContact;
 
+  phone!:PhoneNumbers;
+
   ListGroup!:Array<ContactGroup>;
 
-  groupSingle!:ContactGroup;
 
   phoneNumber!:PhoneNumbers;
 
@@ -34,7 +36,11 @@ export class ContactComponent implements OnInit {
   AddPhoneFormGroup!:FormGroup;
 
   AddGroupFormGroup!:FormGroup;
+  UpdateFormContact!: FormGroup;
+
   closeResult!:string;
+  UpdatePhoneFormGroup!: FormGroup;
+
 
 
 
@@ -54,6 +60,18 @@ export class ContactComponent implements OnInit {
       phoneNumber: this.fp.control(null,[Validators.required,Validators.minLength(8),Validators.maxLength(20)])
     }))
 
+    this.UpdateFormContact= this.fp.group(({
+      firstName: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
+      lastName: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
+      email: this.fp.control(null,[Validators.required,Validators.minLength(5),Validators.maxLength(50),Validators.email]),
+      phoneKind: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
+      phoneNumber: this.fp.control(null,[Validators.required,Validators.minLength(8),Validators.maxLength(20)]),
+      street: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(50)]),
+      city: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
+      zip: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(20)]),
+      country: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(20)])
+    }))
+
     this.AdresseFormGroup=this.fp.group(({
       street: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(50)]),
       city: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
@@ -62,6 +80,11 @@ export class ContactComponent implements OnInit {
     }))
 
     this.AddPhoneFormGroup=this.fp.group(({
+      phoneKind: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
+      phoneNumber: this.fp.control(null,[Validators.required,Validators.minLength(8),Validators.maxLength(20)])
+    }))
+
+    this.UpdatePhoneFormGroup=this.fp.group(({
       phoneKind: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
       phoneNumber: this.fp.control(null,[Validators.required,Validators.minLength(8),Validators.maxLength(20)])
     }))
@@ -111,13 +134,15 @@ export class ContactComponent implements OnInit {
 
 
   handleAddContact() {
-  let detailContact=this.ContactFormGroup.value
-    console.log(detailContact)
+    let detailContact=this.ContactFormGroup.value
+    let adresseForm=this.AdresseFormGroup.value
 
     let contact:Contact={id:0,firstName:detailContact["firstName"],lastName:detailContact["lastName"],email:detailContact["email"]}
     let phoneNumber:PhoneNumbers={id:0,phoneKind:detailContact["phoneKind"],phoneNumber:detailContact["phoneNumber"]}
-    let adresse:Adresse=this.handleAddAdresse();
+    let adresse:Adresse={adresse_id:0,street:adresseForm["street"],city:adresseForm["city"],zip:adresseForm["zip"],country:adresseForm["country"]}
 
+
+    console.log(adresse)
     const ContactJson={
     contactDTO:contact,
       phoneNumbers:Array(phoneNumber),
@@ -133,11 +158,6 @@ export class ContactComponent implements OnInit {
     })
   }
 
-  handleAddAdresse(){
-    let adresseForm=this.AdresseFormGroup.value
-    let adresse:Adresse={adresse_id:0,street:adresseForm["street"],city:adresseForm["city"],zip:adresseForm["zip"],country:adresseForm["country"]}
-    return adresse;
-  }
 
   getErrorMessage(name: string, error: ValidationErrors) {
     if(error['required']){
@@ -171,11 +191,11 @@ export class ContactComponent implements OnInit {
   }
 
   opensm(content:any) {
+    this.AdresseFormGroup.reset()
     this.modalService.open(content,{centered: true,backdrop: 'static'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.AdresseFormGroup.reset()
     });
   }
 
@@ -324,6 +344,86 @@ export class ContactComponent implements OnInit {
   }
 
 
+  handleUpdateContact() {
+
+    let detailContactUpdate=this.UpdateFormContact.value
+
+    let contact:Contact={id:0,firstName:detailContactUpdate["firstName"],lastName:detailContactUpdate["lastName"],email:detailContactUpdate["email"]}
+    let phoneNumber:PhoneNumbers={id:0,phoneKind:detailContactUpdate["phoneKind"],phoneNumber:detailContactUpdate["phoneNumber"]}
+    let adresse:Adresse={adresse_id:0,street:detailContactUpdate["street"],city:detailContactUpdate["city"],zip:detailContactUpdate["zip"],country:detailContactUpdate["country"]}
+
+
+    console.log(adresse)
+    const ContactJson={
+      contactDTO:contact,
+      phoneNumbers:Array(phoneNumber),
+      adresse:adresse
+    }
+
+    this.contactService.UpdateContact(this.detailContact.contactDTO.id,ContactJson).subscribe({
+      next:(data)=>{
+        this.modalService.dismissAll()
+        this.handelGetAllContact()
+      },error:err => {
+        console.error(err)
+      }
+    })
+
+  }
+
+  openUpdate(contentUpdate: any, co: Contact) {
+    this.contactService.getDetailContactById(co.id).subscribe(
+      {
+        next:(data)=>{
+          this.modalService.open(contentUpdate, {
+            centered: true,
+            backdrop: 'static',
+            size: 'lg'
+          });
+          this.detailContact=data;
+          this.UpdateFormContact.patchValue({
+            firstName:this.detailContact.contactDTO.firstName,
+            lastName:this.detailContact.contactDTO.lastName,
+            email:this.detailContact.contactDTO.email,
+            phoneKind:this.detailContact.phoneNumbers[0].phoneKind,
+            phoneNumber:this.detailContact.phoneNumbers[0].phoneNumber,
+            street:this.detailContact.adresse.street,
+            city:this.detailContact.adresse.city,
+            zip:this.detailContact.adresse.zip,
+            country:this.detailContact.adresse.country
+          })
+        }
+      }
+    )
+  }
+
+  handelUpdatePhoneNumber() {
+    let phoneForm=this.UpdatePhoneFormGroup.value
+    let phoneNumber:PhoneNumbers={id:0,phoneKind:phoneForm["phoneKind"],phoneNumber:phoneForm["phoneNumber"]}
+    console.log(this.phoneNumber)
+    this.contactService.UpdatePhone(this.detailContact.contactDTO.id,this.phoneNumber.id,phoneNumber).subscribe(
+      {
+        next:(data)=>{
+          this.modalService.dismissAll()
+          alert("Le numéro a été mis à jour")
+          this.UpdatePhoneFormGroup.reset()
+        }
+      }
+    )
+  }
+
+  openUpdatePhone(contentUpdatePhone: any, phone: PhoneNumbers) {
+          this.phoneNumber=phone;
+          this.modalService.open(contentUpdatePhone, {
+            centered: true,
+            backdrop: 'static'
+      }
+    )
+    this.UpdatePhoneFormGroup.patchValue({
+      phoneKind:this.phoneNumber.phoneKind,
+      phoneNumber:this.phoneNumber.phoneNumber,
+    })
+  }
 }
 
 

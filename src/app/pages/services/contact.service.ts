@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import {Observable, of} from "rxjs";
+import {Injectable} from '@angular/core';
+import {Observable} from "rxjs";
 import {Contact, DetailContact} from "../model/contact.model";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Adresse} from "../model/adresse.model";
 import {PhoneNumbers} from "../model/phoneNumbers.model";
@@ -31,7 +31,7 @@ export class ContactService {
     return this.httpClient.get<Array<Contact>>(this.contactBaseUrl+'/findbyKeyWord/'+Keyword)
   }
 
-  public AddContact(contact: {contactDTO: Contact; phoneNumbers: PhoneNumbers[] ,adresse: Adresse; }):Observable<DetailContact>{
+  public AddContact(contact: {contactDTO: Contact, phoneNumbers: PhoneNumbers[] ,adresse: Adresse }):Observable<DetailContact>{
 
      return  this.httpClient.post<DetailContact>(this.contactBaseUrl,contact)
   }
@@ -49,4 +49,11 @@ export class ContactService {
   }
 
 
+  UpdateContact(idContact:number,ContactUpdate: { contactDTO: Contact, phoneNumbers: PhoneNumbers[],adresse: Adresse }) {
+    return  this.httpClient.put<DetailContact>(this.contactBaseUrl+'/'+idContact,ContactUpdate)
+  }
+
+  UpdatePhone(idContact: number, idPhone: number,phoneUpdate:PhoneNumbers) {
+    return  this.httpClient.put<DetailContact>(this.PhoneBaseUrl+'/updatePhoneNumber/'+idContact+'/'+idPhone,phoneUpdate)
+  }
 }
