@@ -17,6 +17,7 @@ export class GroupComponent implements OnInit {
   group!:Array<ContactGroup>;
 
   groupSingle!:ContactGroup;
+  searchFormGroup! : FormGroup;
 
   groupForm!:FormGroup;
   groupUpdateForm!:FormGroup;
@@ -29,6 +30,10 @@ export class GroupComponent implements OnInit {
   constructor(private groupService:GroupService , private fp: FormBuilder , private modalService: NgbModal) { }
 
   ngOnInit(): void {
+
+    this.searchFormGroup=this.fp.group({
+      keyword: this.fp.control(null)
+    })
 
     this.groupForm=this.fp.group(({
       groupName: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
@@ -64,6 +69,20 @@ export class GroupComponent implements OnInit {
           this.errorMessage="une erreur serveur s'est produite";
         }
       });
+  }
+
+  isAlpha(str: string): boolean {
+    return /^[a-zA-Z][a-zA-Z\s]*$/.test(str);
+  }
+  handleSearchContactGroup() {
+    let keyword = this.searchFormGroup.value.keyword;
+    if(this.isAlpha(keyword)) {
+      this.groupService.searchGroup(keyword).subscribe({
+        next: (data) => {
+          this.group = data;
+        }
+      })
+    } else this.handelGetAllContactGroup()
   }
 
   handelDeleteGroup(g: ContactGroup) {

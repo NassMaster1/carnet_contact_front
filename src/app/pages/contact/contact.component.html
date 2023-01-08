@@ -73,7 +73,7 @@
   </div>
 
 <!-- **************************************************************************************************** -->
-<!-- ############################### Adresse  ######################## -->
+<!-- ############################### ADD contact  ######################## -->
 <!-- **************************************************************************************************** -->
 
 <ng-template #content let-modal>
@@ -107,7 +107,7 @@
 
     <div class="modal-body">
         <label for="email">Email</label>
-        <input id="email" formControlName="email" class="form-control" >
+        <input id="email" formControlName="email" class="form-control text-lowercase" >
 
       <small *ngIf="ContactFormGroup.controls['email'].errors && ContactFormGroup.controls['email'].touched" class="text-danger">
         {{getErrorMessage('Email', ContactFormGroup.controls['email'].errors)}}

@@ -130,14 +130,20 @@ export class ContactComponent implements OnInit {
     )
   }
 
+   isAlpha(str: string): boolean {
+    return /^[a-zA-Z][a-zA-Z\s]*$/.test(str);
+  }
+
   handleSearchContact() {
     let keyword = this.searchFormGroup.value.keyword;
-    this.contactService.searchContacts(keyword).subscribe( {
-      next:(data)=>{
-        this.contact=data;
-      }
-    })
-
+    if (this.isAlpha(keyword)) {
+      this.contactService.searchContacts(keyword).subscribe({
+        next: (data) => {
+          this.contact = data;
+        }
+      })
+    }
+    else this.handelGetAllContact()
   }
 
   handleAddContact() {
@@ -289,6 +295,7 @@ export class ContactComponent implements OnInit {
   }
 
   openAddPhone(content:any) {
+    this.AddPhoneFormGroup.reset()
     this.modalService.open(content,{centered: true,backdrop: 'static'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

@@ -42,4 +42,7 @@ export class GroupService {
     return this.httpClient.post<ContactGroup>(this.contactGroupBaseUrl+'/addListContact/'+id+'/'+groupId,null)
   }
 
+  searchGroup(keyword: String):Observable<ContactGroup[]>  {
+    return this.httpClient.get<Array<ContactGroup>>(this.contactGroupBaseUrl+'/findbyKeyWord/'+keyword)
+  }
 }

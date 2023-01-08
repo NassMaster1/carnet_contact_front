@@ -18,10 +18,10 @@
 
     <div class=" col-md-10 col-sm-12" >
 
-      <form >
+      <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchContactGroup()" >
         <div class="input-group">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button id="logoSearch" class="btn bi-search"> </button>
+          <input class="form-control mr-sm-2" type="search" formControlName="keyword" placeholder="Search" aria-label="Search">
+          <button id="logoSearch" class="btn bi-search"  > </button>
         </div>
       </form>
     </div>
