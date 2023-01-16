@@ -45,4 +45,8 @@ export class GroupService {
   searchGroup(keyword: String):Observable<ContactGroup[]>  {
     return this.httpClient.get<Array<ContactGroup>>(this.contactGroupBaseUrl+'/findbyKeyWord/'+keyword)
   }
+
+  deleteContactInGroup(id_contact: number, id_group: number) {
+    return this.httpClient.delete<boolean>(this.contactGroupBaseUrl+'/deleteContactInGroup/'+id_contact+'/'+id_group)
+  }
 }

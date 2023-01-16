@@ -71,6 +71,19 @@ export class GroupComponent implements OnInit {
       });
   }
 
+
+  handelDeleteContactInGroup(contact: Contact) {
+    let conf=confirm("Etes vous sur de vouloir supprmier le numéro "+contact.lastName+ " "+contact.firstName)
+    if(conf==false) return;
+    this.groupService.deleteContactInGroup(contact.id, this.groupSingle.id).subscribe(
+      {
+        next:(data)=>{
+          this.modalService.dismissAll()
+        }
+      }
+    )
+  }
+
   isAlpha(str: string): boolean {
     return /^[a-zA-Z][a-zA-Z\s]*$/.test(str);
   }
@@ -152,7 +165,8 @@ export class GroupComponent implements OnInit {
   }
 
   openDetailGroup(content: any, g: ContactGroup) {
-
+    
+    this.groupSingle=g;
     this.groupService.getlistContactBygroup(g).subscribe({
       next:(data)=>{
         this.listeConatct=data;
@@ -191,6 +205,7 @@ export class GroupComponent implements OnInit {
       }
     )
   }
+
 
 
 }
