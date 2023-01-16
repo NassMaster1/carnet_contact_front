@@ -14,6 +14,5 @@ export interface Contact{
 export interface DetailContact{
   contactDTO:Contact;
   phoneNumbers:PhoneNumbers[];
-
   adresse:Adresse;
 }

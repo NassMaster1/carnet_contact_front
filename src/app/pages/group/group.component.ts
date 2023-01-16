@@ -43,7 +43,7 @@ export class GroupComponent implements OnInit {
       groupUpdateForm: this.fp.control(null,[Validators.required,Validators.minLength(2),Validators.maxLength(30)]),
     }))
 
-    this.handelGetAllContactGroup()
+      this.handelGetAllContactGroup()
   }
 
   getErrorMessage(name: string, error: ValidationErrors) {
@@ -63,7 +63,6 @@ export class GroupComponent implements OnInit {
       {
         next:(data)=>{
           this.group=data;
-          console.log(data)
         },
         error :(err)=> {
           this.errorMessage="une erreur serveur s'est produite";
@@ -114,7 +113,6 @@ export class GroupComponent implements OnInit {
 
   handleAddGroup() {
     let group=this.groupForm.value
-    console.log(group)
 
     let contactGroup:ContactGroup={id:0,GroupName:group["groupName"]}
 
@@ -130,8 +128,6 @@ export class GroupComponent implements OnInit {
 
   handleUpdateGroup() {
     let group=this.groupUpdateForm.value
-    console.log(group)
-
     let contactGroup:ContactGroup={id:0,GroupName:group["groupUpdateForm"]}
 
     this.groupService.UpdateContactgroup(this.groupSingle.id, contactGroup).subscribe({
@@ -165,7 +161,7 @@ export class GroupComponent implements OnInit {
   }
 
   openDetailGroup(content: any, g: ContactGroup) {
-    
+
     this.groupSingle=g;
     this.groupService.getlistContactBygroup(g).subscribe({
       next:(data)=>{
