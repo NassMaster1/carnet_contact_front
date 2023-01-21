@@ -112,7 +112,7 @@ export class ContactComponent implements OnInit {
           this.contact=data;
         },
         error :(err)=> {
-          this.errorMessage="une erreur serveur s'est produite";
+          this.errorMessage="Une erreur serveur s'est produite";
         }
       });
   }

@@ -4,7 +4,7 @@ import {ContactGroup} from "../model/contactGroup.model";
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {GroupService} from "../services/group.service";
-
+import {CdkDragDrop, moveItemInArray,transferArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-group',
@@ -25,6 +25,13 @@ export class GroupComponent implements OnInit {
 
   closeResult!:string;
   listeConatct!: Array<Contact>;
+
+
+
+  drop(event: CdkDragDrop<ContactGroup[]>) {
+      moveItemInArray( event.container.data, event.previousIndex, event.currentIndex
+      );
+    }
 
 
   constructor(private groupService:GroupService , private fp: FormBuilder , private modalService: NgbModal) { }

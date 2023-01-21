@@ -4,8 +4,9 @@
   <!-- ############################### EROOR SERVER  ######################## -->
   <!-- **************************************************************************************************** -->
   <ng-template #errors>
-    <h2 id="Messageerror" class="text-danger">{{errorMessage}}</h2>
-    <!--<img id="imageerror" src="assets/error500.svg">-->
+    <div id="Messageerror" >
+      <h2 class="text-danger">{{errorMessage}}</h2>
+    </div>
   </ng-template>
 
 
@@ -52,13 +53,13 @@
         </tr>
         </thead>
 
-        <tbody>
-        <tr *ngFor="let g of group">
-          <td>{{g.GroupName}}</td>
+        <tbody cdkDropList  [cdkDropListData]="group" class="example-list" (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let g of group" cdkDrag>
+          <td class="td_groupname" >{{g.GroupName}} </td>
           <td><button id="voirLesContactsBtn" class="btn btn-outline-dark" (click)="openDetailGroup(content_detailGroup,g)" >Contacts groupe</button></td>
           <td><button class="btn" (click)="openupdateGroup(contentUpdate,g)" ><i class="bi bi-pen"></i></button></td>
           <td><button class="btn"(click)="handelDeleteGroup(g)" ><i class="bi bi-trash-fill"></i></button></td>
-
+          <td><button class="btn" cdkDragHandle ><i class="bi bi-arrows-move"></i></button></td>
         </tr>
         </tbody>
       </table>
