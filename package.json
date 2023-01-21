@@ -21,7 +21,7 @@
     "@angular/router": "^15.0.4",
     "@ng-bootstrap/ng-bootstrap": "^14.0.0",
     "angular-material": "^0.8.0",
-    "bootstrap": "^5.2.1",
+    "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.9.1",
     "font-awesome": "^4.7.0",
     "materialize-css": "^1.0.0-rc.2",
