@@ -1,4 +1,3 @@
-
 button[type="submit"]{
   background-color: #926aef;
   color: white;
@@ -18,6 +17,9 @@ label{
   margin: auto;
 }
 
+#confirmContactButtom{
+  margin-left: 7%;
+}
 #logoSearch{
   background-color: rgba(232, 232, 232, 0.45);
 }
@@ -53,14 +55,19 @@ label{
   font-size: larger;
 }
 
-
-
-#Messageerror h2{
+#imageerror{
+  width: 40%;
+  height: 40%;
   margin-left: 30%;
-  margin-top: 20%;
-  font-weight: bold;
+  margin-top: 5%;
 }
 
+#Messageerror{
+  margin-left: 35%;
+  margin-top: 2%;
+  font-weight: bold;
+  font-size: larger;
+}
 
 #photoProfil{
   width: 10%;
@@ -256,5 +263,3 @@ label{
   color: #1369ce;
   background-color: #f7f5ec;
 }
-
-

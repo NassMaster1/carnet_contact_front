@@ -319,10 +319,13 @@ export class ContactComponent implements OnInit {
             document.getElementById('Demail').setAttribute('value', this.detailContact.contactDTO.email);
           }
 
-          if(this.detailContact.adresse!=null)
+          if(this.detailContact.adresse.city!=null)
           { // @ts-ignore
             document.getElementById('Adresse').setAttribute('value', this.detailContact.adresse.street+" "+ this.detailContact.adresse.zip+", "+this.detailContact.adresse.city+" "+this.detailContact.adresse.country);
-          }
+          } else
+            { // @ts-ignore
+              document.getElementById('Adresse').setAttribute('value', "");
+            }
 
 
           if(this.detailContact.phoneNumbers[0].phoneKind!=null && this.detailContact.phoneNumbers[0].phoneKind!=undefined )
